@@ -3,7 +3,7 @@ import { google } from "googleapis";
 
 export const runtime = "nodejs";
 
-const HEADER = ["Date", "Time", "SYS (mmHg)", "DIA (mmHg)", "Pulse (bpm)"];
+const HEADER = ["Date", "SYS (mmHg)", "DIA (mmHg)", "Pulse (bpm)"];
 
 function getSheetsClient() {
   const credsJson = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
@@ -35,7 +35,7 @@ function colorForDia(dia: number): [number, number, number] {
 
 export async function POST(req: NextRequest) {
   try {
-    const { sys, dia, pulse } = await req.json();
+    const { sys, dia, pulse, date } = await req.json();
     const sheetId = process.env.GOOGLE_SHEET_ID;
     if (!sheetId) {
       throw new Error("Server is missing GOOGLE_SHEET_ID.");
@@ -54,28 +54,26 @@ export async function POST(req: NextRequest) {
 
     const existing = await sheets.spreadsheets.values.get({
       spreadsheetId: sheetId,
-      range: `${sheetName}!A1:E1`,
+      range: `${sheetName}!A1:D1`,
     });
 
     if (!existing.data.values || existing.data.values.length === 0) {
       await sheets.spreadsheets.values.update({
         spreadsheetId: sheetId,
-        range: `${sheetName}!A1:E1`,
+        range: `${sheetName}!A1:D1`,
         valueInputOption: "RAW",
         requestBody: { values: [HEADER] },
       });
     }
 
-    const now = new Date();
-    const date = now.toLocaleDateString();
-    const time = now.toLocaleTimeString();
+    const dateValue = typeof date === "string" && date ? date : new Date().toLocaleDateString();
 
     const appendResult = await sheets.spreadsheets.values.append({
       spreadsheetId: sheetId,
-      range: `${sheetName}!A:E`,
+      range: `${sheetName}!A:D`,
       valueInputOption: "RAW",
       insertDataOption: "INSERT_ROWS",
-      requestBody: { values: [[date, time, sysNum, diaNum, pulseNum]] },
+      requestBody: { values: [[dateValue, sysNum, diaNum, pulseNum]] },
     });
 
     const updatedRange = appendResult.data.updates?.updatedRange;
@@ -101,8 +99,8 @@ export async function POST(req: NextRequest) {
                     sheetId: gridSheetId,
                     startRowIndex: rowIndex,
                     endRowIndex: rowIndex + 1,
-                    startColumnIndex: 2,
-                    endColumnIndex: 3,
+                    startColumnIndex: 1,
+                    endColumnIndex: 2,
                   },
                   cell: {
                     userEnteredFormat: { backgroundColor: { red: r, green: g, blue: b } },
@@ -116,8 +114,8 @@ export async function POST(req: NextRequest) {
                     sheetId: gridSheetId,
                     startRowIndex: rowIndex,
                     endRowIndex: rowIndex + 1,
-                    startColumnIndex: 3,
-                    endColumnIndex: 4,
+                    startColumnIndex: 2,
+                    endColumnIndex: 3,
                   },
                   cell: {
                     userEnteredFormat: { backgroundColor: { red: dr, green: dg, blue: db } },

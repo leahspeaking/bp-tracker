@@ -15,6 +15,7 @@ export default function Home() {
   const [status, setStatus] = useState<Status>("idle");
   const [reading, setReading] = useState<Reading>({ sys: "", dia: "", pulse: "" });
   const [errorMessage, setErrorMessage] = useState("");
+  const [sheetUrl, setSheetUrl] = useState("");
 
   function handleTakePhoto() {
     fileInputRef.current?.click();
@@ -63,7 +64,7 @@ export default function Home() {
       const res = await fetch("/api/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(reading),
+        body: JSON.stringify({ ...reading, date: new Date().toLocaleDateString() }),
       });
 
       if (!res.ok) {
@@ -72,10 +73,8 @@ export default function Home() {
       }
 
       const data = await res.json();
+      setSheetUrl(data.sheetUrl ?? "");
       setStatus("saved");
-      if (data.sheetUrl) {
-        window.location.href = data.sheetUrl;
-      }
     } catch (err) {
       setErrorMessage(err instanceof Error ? err.message : "Something went wrong.");
       setStatus("error");
@@ -176,6 +175,16 @@ export default function Home() {
             >
               Add Another Reading
             </button>
+            {sheetUrl && (
+              <a
+                href={sheetUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-12 w-full items-center justify-center rounded-full border border-black/[.08] text-base font-medium dark:border-white/[.145]"
+              >
+                Open Sheet
+              </a>
+            )}
           </div>
         )}
       </main>
