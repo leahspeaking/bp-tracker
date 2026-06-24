@@ -131,7 +131,10 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({
+      ok: true,
+      sheetUrl: `https://docs.google.com/spreadsheets/d/${sheetId}/edit`,
+    });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "Could not save this reading." }, { status: 500 });

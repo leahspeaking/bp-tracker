@@ -71,7 +71,11 @@ export default function Home() {
         throw new Error(body.error || "Could not save this reading.");
       }
 
+      const data = await res.json();
       setStatus("saved");
+      if (data.sheetUrl) {
+        window.location.href = data.sheetUrl;
+      }
     } catch (err) {
       setErrorMessage(err instanceof Error ? err.message : "Something went wrong.");
       setStatus("error");
