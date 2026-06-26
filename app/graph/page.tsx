@@ -41,7 +41,7 @@ export default function GraphPage() {
     <div className="flex flex-col flex-1 items-center bg-zinc-50 font-sans dark:bg-black px-4">
       <main className="flex w-full max-w-2xl flex-col items-center gap-6 py-12">
         <h1 className="text-2xl font-semibold text-center text-black dark:text-zinc-50">
-          Trends
+          Kim&apos;s Numbers for a Healthy and Happy Life 😊
         </h1>
 
         {error && <p className="text-center text-sm text-red-600">{error}</p>}
@@ -59,8 +59,8 @@ export default function GraphPage() {
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={readings} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
+                <XAxis dataKey="date" label={{ value: "Date", position: "insideBottom", offset: -5 }} />
+                <YAxis label={{ value: "mmHg / bpm", angle: -90, position: "insideLeft" }} />
                 <Tooltip />
                 <Legend />
                 <Line type="monotone" dataKey="sys" name="SYS" stroke="#dc2626" strokeWidth={2} />
