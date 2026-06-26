@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRef, useState } from "react";
 
 type Reading = {
@@ -185,6 +186,12 @@ export default function Home() {
                 Open Sheet
               </a>
             )}
+            <Link
+              href="/graph"
+              className="flex h-12 w-full items-center justify-center rounded-full border border-black/[.08] text-base font-medium dark:border-white/[.145]"
+            >
+              View Graph
+            </Link>
           </div>
         )}
       </main>
