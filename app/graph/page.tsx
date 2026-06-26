@@ -55,22 +55,40 @@ export default function GraphPage() {
         )}
 
         {!error && readings !== null && readings.length > 0 && (
-          <div className="h-96 w-full">
+          <div className="h-[28rem] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={readings} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
+              <LineChart data={readings} margin={{ top: 8, right: 16, bottom: 32, left: 8 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" label={{ value: "Date", position: "insideBottom", offset: -5 }} />
-                <YAxis label={{ value: "mmHg / bpm", angle: -90, position: "insideLeft" }} />
+                <XAxis
+                  dataKey="date"
+                  label={{
+                    value: "Date",
+                    position: "insideBottom",
+                    offset: -20,
+                    style: { fontWeight: 700, fontSize: 16 },
+                  }}
+                />
+                <YAxis
+                  label={{
+                    value: "mmHg / bpm",
+                    angle: -90,
+                    position: "insideLeft",
+                    style: { fontWeight: 700, fontSize: 16, textAnchor: "middle" },
+                  }}
+                />
                 <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="sys" name="SYS" stroke="#dc2626" strokeWidth={2} />
-                <Line type="monotone" dataKey="dia" name="DIA" stroke="#2563eb" strokeWidth={2} />
+                <Legend
+                  wrapperStyle={{ fontWeight: 700, fontSize: 18 }}
+                  iconSize={18}
+                />
+                <Line type="monotone" dataKey="sys" name="SYS" stroke="#dc2626" strokeWidth={3} />
+                <Line type="monotone" dataKey="dia" name="DIA" stroke="#2563eb" strokeWidth={3} />
                 <Line
                   type="monotone"
                   dataKey="pulse"
                   name="Pulse"
                   stroke="#16a34a"
-                  strokeWidth={2}
+                  strokeWidth={3}
                 />
               </LineChart>
             </ResponsiveContainer>
