@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   CartesianGrid,
-  Legend,
   Line,
   LineChart,
   ResponsiveContainer,
@@ -55,32 +54,21 @@ export default function GraphPage() {
         )}
 
         {!error && readings !== null && readings.length > 0 && (
+          <>
           <div className="h-[28rem] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={readings} margin={{ top: 8, right: 16, bottom: 32, left: 8 }}>
+              <LineChart data={readings} margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="date"
-                  label={{
-                    value: "Date",
-                    position: "insideBottom",
-                    offset: -20,
-                    style: { fontWeight: 700, fontSize: 16 },
-                  }}
-                />
+                <XAxis dataKey="date" tick={{ fontSize: 12 }} />
                 <YAxis
                   label={{
                     value: "mmHg / bpm",
                     angle: -90,
                     position: "insideLeft",
-                    style: { fontWeight: 700, fontSize: 16, textAnchor: "middle" },
+                    style: { fontWeight: 700, fontSize: 18, textAnchor: "middle" },
                   }}
                 />
                 <Tooltip />
-                <Legend
-                  wrapperStyle={{ fontWeight: 700, fontSize: 18 }}
-                  iconSize={18}
-                />
                 <Line type="monotone" dataKey="sys" name="SYS" stroke="#dc2626" strokeWidth={3} />
                 <Line type="monotone" dataKey="dia" name="DIA" stroke="#2563eb" strokeWidth={3} />
                 <Line
@@ -93,6 +81,22 @@ export default function GraphPage() {
               </LineChart>
             </ResponsiveContainer>
           </div>
+          <p className="text-center text-lg font-bold text-black dark:text-zinc-50">Date</p>
+          <div className="flex items-center justify-center gap-6">
+            <span className="flex items-center gap-2 text-lg font-bold" style={{ color: "#dc2626" }}>
+              <span className="h-3 w-3 rounded-full" style={{ backgroundColor: "#dc2626" }} />
+              SYS
+            </span>
+            <span className="flex items-center gap-2 text-lg font-bold" style={{ color: "#2563eb" }}>
+              <span className="h-3 w-3 rounded-full" style={{ backgroundColor: "#2563eb" }} />
+              DIA
+            </span>
+            <span className="flex items-center gap-2 text-lg font-bold" style={{ color: "#16a34a" }}>
+              <span className="h-3 w-3 rounded-full" style={{ backgroundColor: "#16a34a" }} />
+              Pulse
+            </span>
+          </div>
+          </>
         )}
 
         <Link
